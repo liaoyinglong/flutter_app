@@ -41,7 +41,7 @@ jobs:
       run: |
         mkdir -p snap
         cat << EOF > snap/snapcraft.yaml
-        name: f_demo
+        name: fdemo
         version: '1.0.0'
         summary: Short summary of your app
         description: |
@@ -52,8 +52,8 @@ jobs:
         grade: stable
 
         apps:
-          f_demo:
-            command: bin/f_demo
+          fdemo:
+            command: bin/fdemo
             plugs:
               - network
               - desktop
@@ -62,7 +62,7 @@ jobs:
               - x11
 
         parts:
-          f_demo:
+          fdemo:
             plugin: nil
             source: build/linux/x64/release/bundle
             override-build: |
