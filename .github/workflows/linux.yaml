@@ -53,15 +53,30 @@ jobs:
 
         apps:
           f_demo:
-            command: f_demo
-            extensions: [flutter-stable]
+            command: bin/f_demo
             plugs:
               - network
+              - desktop
+              - desktop-legacy
+              - wayland
+              - x11
 
         parts:
           f_demo:
+            plugin: nil
             source: build/linux/x64/release/bundle
-            plugin: dump
+            override-build: |
+              craftctl default
+              mkdir -p $CRAFT_PART_INSTALL/bin
+              cp -r $CRAFT_PART_SRC/* $CRAFT_PART_INSTALL/bin/
+            stage-packages:
+              - libgtk-3-0
+              - libblkid1
+              - liblzma5
+        
+        layout:
+          /usr/lib/$CRAFT_ARCH_TRIPLET/webkit2gtk-4.0:
+            bind: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/webkit2gtk-4.0
         EOF
     
     - name: Build Snap
