@@ -1,4 +1,4 @@
-name: Flutter Linux Build and Snap
+name: Flutter Linux Build
 
 on:
   push:
@@ -31,60 +31,11 @@ jobs:
       run: flutter config --enable-linux-desktop
     
     - name: Build Linux
-      run: flutter build linux --release
+      run: 
+        flutter build linux --release --target-platform linux-aarch64
     
-    - name: Install Snapcraft
-      run: |
-        sudo snap install snapcraft --classic
-        sudo chown root:root /
-    - name: Create snapcraft.yaml
-      run: |
-        mkdir -p snap
-        cat << EOF > snap/snapcraft.yaml
-        name: fdemo
-        version: '1.0.0'
-        summary: Short summary of your app
-        description: |
-          A longer description of your app.
-
-        confinement: strict
-        base: core22
-        grade: stable
-
-        apps:
-          fdemo:
-            command: bin/fdemo
-            plugs:
-              - network
-              - desktop
-              - desktop-legacy
-              - wayland
-              - x11
-
-        parts:
-          f_demo:
-            plugin: nil
-            source: build/linux/x64/release/bundle
-            override-build: |
-              craftctl default
-              mkdir -p $CRAFT_PART_INSTALL/bin
-              cp -r $CRAFT_PART_SRC/* $CRAFT_PART_INSTALL/bin/
-              chmod +x $CRAFT_PART_INSTALL/bin/f_demo
-            stage-packages:
-              - libgtk-3-0
-              - libblkid1
-              - liblzma5
-        
-        layout:
-          /usr/lib/$CRAFT_ARCH_TRIPLET/webkit2gtk-4.0:
-            bind: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/webkit2gtk-4.0
-        EOF
-    
-    - name: Build Snap
-      run: snapcraft --destructive-mode
-    
-    - name: Archive Snap
+    - name: Archive Linux build
       uses: actions/upload-artifact@v3
       with:
-        name: snap-package
-        path: '*.snap'
+        name: linux-build
+        path: build/linux/x64/release/bundle
