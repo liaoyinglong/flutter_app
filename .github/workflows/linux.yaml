@@ -62,13 +62,14 @@ jobs:
               - x11
 
         parts:
-          fdemo:
+          f_demo:
             plugin: nil
             source: build/linux/x64/release/bundle
             override-build: |
               craftctl default
               mkdir -p $CRAFT_PART_INSTALL/bin
               cp -r $CRAFT_PART_SRC/* $CRAFT_PART_INSTALL/bin/
+              chmod +x $CRAFT_PART_INSTALL/bin/f_demo
             stage-packages:
               - libgtk-3-0
               - libblkid1
