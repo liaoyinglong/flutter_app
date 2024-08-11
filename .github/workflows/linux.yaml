@@ -37,29 +37,29 @@ jobs:
       run: |
         sudo snap install snapcraft --classic
         sudo chown root:root /
-    
     - name: Create snapcraft.yaml
       run: |
+        mkdir -p snap
         cat << EOF > snap/snapcraft.yaml
-        name: f_demo # change this
-        version: '1.0.0' # change this
+        name: f_demo
+        version: '1.0.0'
         summary: Short summary of your app
         description: |
           A longer description of your app.
 
         confinement: strict
-        base: core18
+        base: core22
         grade: stable
 
         apps:
-          f_demo: # change this
-            command: f_demo # change this to match your executable name
-            extensions: [flutter-master]
+          f_demo:
+            command: f_demo
+            extensions: [flutter-stable]
             plugs:
               - network
 
         parts:
-          f_demo: # change this
+          f_demo:
             source: build/linux/x64/release/bundle
             plugin: dump
         EOF
