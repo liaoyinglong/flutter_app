@@ -1,4 +1,4 @@
-name: Flutter Linux Build
+name: Flutter Linux Build and Snap
 
 on:
   push:
@@ -33,8 +33,42 @@ jobs:
     - name: Build Linux
       run: flutter build linux --release
     
-    - name: Archive Linux build
+    - name: Install Snapcraft
+      run: |
+        sudo snap install snapcraft --classic
+        sudo chown root:root /
+    
+    - name: Create snapcraft.yaml
+      run: |
+        cat << EOF > snap/snapcraft.yaml
+        f_name: demo # change this
+        version: '1.0.0' # change this
+        summary: Short summary of your app
+        description: |
+          A longer description of your app.
+
+        confinement: strict
+        base: core18
+        grade: stable
+
+        apps:
+          f_demo: # change this
+            command: your_app_name # change this to match your executable name
+            extensions: [flutter-master]
+            plugs:
+              - network
+
+        parts:
+          f_demo: # change this
+            source: build/linux/x64/release/bundle
+            plugin: dump
+        EOF
+    
+    - name: Build Snap
+      run: snapcraft --destructive-mode
+    
+    - name: Archive Snap
       uses: actions/upload-artifact@v3
       with:
-        name: linux-build
-        path: build/linux/x64/release/bundle
+        name: snap-package
+        path: '*.snap'
