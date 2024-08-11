@@ -41,7 +41,7 @@ jobs:
     - name: Create snapcraft.yaml
       run: |
         cat << EOF > snap/snapcraft.yaml
-        f_name: demo # change this
+        name: f_demo # change this
         version: '1.0.0' # change this
         summary: Short summary of your app
         description: |
@@ -53,7 +53,7 @@ jobs:
 
         apps:
           f_demo: # change this
-            command: your_app_name # change this to match your executable name
+            command: f_demo # change this to match your executable name
             extensions: [flutter-master]
             plugs:
               - network
